@@ -1,0 +1,42 @@
+<%= form_for(@foaf) do |f| %>
+  <% if @foaf.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@foaf.errors.count, "error") %> prohibited this foaf from being saved:</h2>
+
+      <ul>
+      <% @foaf.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :ident, 'Identifier, e.g. "bsmith"' %>
+    <%= f.text_field :ident %>
+  </div>
+  <div class="field">
+    <%= f.label :name, 'Your Name, e.g. "Bob Smith"' %>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :work, "URI for Your Place of Work" %>
+    <%= f.text_field :work, value: "http://library.princeton.edu" %>
+  </div>
+  <div class="field">
+    <%= f.label :birthday, "Your Birthday" %>
+    <%= f.text_field :birthday, value: "yyyy-mm-dd", class: "datepicker" %>
+  </div>
+
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+
+  <script type="text/javascript">
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd'
+    });
+  </script>
+
+<% end %>
