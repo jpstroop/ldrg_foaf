@@ -22,4 +22,5 @@ class Foaf < ActiveRecord::Base
   #   message: 'must be formatted as YYYY-MM-DD.'
   # }
 
+
 end
