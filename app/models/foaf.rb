@@ -2,6 +2,8 @@ require 'uri'
 
 class Foaf < ActiveRecord::Base
 
+  has_and_belongs_to_many :interests
+
   validates :name, :work, :ident, :birthday, presence: true
 
   # validates :ident, 

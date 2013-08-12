@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130810150535) do
+ActiveRecord::Schema.define(version: 20130812191207) do
 
   create_table "foafs", force: true do |t|
     t.string   "ident"
@@ -23,5 +23,20 @@ ActiveRecord::Schema.define(version: 20130810150535) do
   end
 
   add_index "foafs", ["ident"], name: "index_foafs_on_ident", unique: true
+
+  create_table "foafs_interests", id: false, force: true do |t|
+    t.integer "foaf_id",     null: false
+    t.integer "interest_id", null: false
+  end
+
+  create_table "interests", force: true do |t|
+    t.string   "label"
+    t.string   "uri"
+    t.integer  "foaf_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "interests", ["foaf_id"], name: "index_interests_on_foaf_id"
 
 end
