@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @foaf.name %>
+</p>
+
+<p>
+  <strong>Work:</strong>
+  <%= @foaf.work %>
+</p>
+
+<%= link_to 'Edit', edit_foaf_path(@foaf) %> |
+<%= link_to 'Back', foafs_path %>

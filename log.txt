@@ -1,0 +1,26 @@
+Start with steps 1-7 from: http://stackoverflow.com/a/5385249/714478
+
+```bash
+rails g scaffold foaf name:string work:string
+rails g scaffold interest label:string uri:string
+rails g scaffold interest label:string uri:string
+```
+
+Make the result of the above look like:
+
+```ruby 
+class CreateFoafsInterests < ActiveRecord::Migration
+  def self.up
+    create_table :foafs_interests, id: false do |t|
+      t.integer :foaf_id
+      t.integer :interest_id
+    end
+  end
+
+  def self.down
+    drop_table :foafs_interests
+  end
+end
+```
+Then make the models look similar to the question here: http://stackoverflow.com/q/10326551/714478 
+See also http://apidock.com/rails/ActionView/Helpers/FormHelper/fields_for

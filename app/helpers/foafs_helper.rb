@@ -1,0 +1,2 @@
+module FoafsHelper
+end
