@@ -17,11 +17,11 @@ class FoafsController < ApplicationController
     @foaf = Foaf.new
     # 2.times { @foaf.interests.build }
     1.times { @foaf.interests.build }
-
   end
 
   # GET /foafs/1/edit
   def edit
+    1.times { @foaf.interests.build }
   end
 
   # POST /foafs
@@ -35,8 +35,11 @@ class FoafsController < ApplicationController
     
     @foaf = Foaf.new(name: foaf_params[:name], work: foaf_params[:work], 
       slug: foaf_params[:slug], birthday: foaf_params[:birthday])
-    foaf_params[:interests_attributes]["0"][:id].each do |i|
-      @foaf.interests << Interest.find(i)
+
+    if(foaf_params.has_key?(:interests_attributes))
+      foaf_params[:interests_attributes]["0"][:id].each do |i|
+        @foaf.interests << Interest.find(i)
+      end
     end
 
     respond_to do |format|
@@ -53,6 +56,15 @@ class FoafsController < ApplicationController
   # PATCH/PUT /foafs/1
   # PATCH/PUT /foafs/1.json
   def update
+
+    @foaf.interests.clear
+
+    if(foaf_params.has_key?(:interests_attributes))
+      foaf_params[:interests_attributes]["0"][:id].each do |i|
+        @foaf.interests << Interest.find(i)
+      end
+    end
+
     respond_to do |format|
       if @foaf.update(foaf_params)
         format.html { redirect_to @foaf, notice: 'Foaf was successfully updated.' }
