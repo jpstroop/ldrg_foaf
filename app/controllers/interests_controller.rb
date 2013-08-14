@@ -7,10 +7,10 @@ class InterestsController < ApplicationController
   def index
     @interests = Interest.where("label LIKE :prefix", prefix: "#{params[:starts_with]}%").limit(10)
     s = @interests.to_json only: [:label, :uri, :id]
-    render json: "{ \"results\": #{s}, \"more\": false }"
+    render json: "{ \"results\": #{s}, \"more\": true }"
   end
 
-  # Used in loader task only!
+  # Used in `rake interests:load` task 
   def create 
     @interest = Interest.new(interest_params)
     @interest.save
