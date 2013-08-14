@@ -1,4 +1,4 @@
-JoinWtf::Application.routes.draw do
+LdrgFoaf::Application.routes.draw do
   resources :interests
 
   resources :foafs

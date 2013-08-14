@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-JoinWtf::Application.config.secret_key_base = '5c1eb72efcca62304cc283e19f29749ad19f3a68e9c51766498bb0d39c7835016b45a06e78425569e531fb5431b3fd75cfe3d9fbdba23081db672853924943ca'
+LdrgFoaf::Application.config.secret_key_base = '5c1eb72efcca62304cc283e19f29749ad19f3a68e9c51766498bb0d39c7835016b45a06e78425569e531fb5431b3fd75cfe3d9fbdba23081db672853924943ca'
