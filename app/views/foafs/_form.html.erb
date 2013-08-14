@@ -32,18 +32,64 @@
   </div>
 
   <h3>Interests</h3>
-  <%= f.fields_for :interests do |interests_fields| %>
-    <%= interests_fields.collection_select :id, Interest.all, :id, :label, 
-      {prompt: @select_value, selected: @foaf.interests, include_hidden: false}, {multiple: true} %>
-  <% end %>
+
+<div class="field">
+      <input name='foaf[interests_attributes][0][id][]' type='hidden' id='e9' style='width:300px'/>
+</div>
 
   <div class="actions">
     <%= f.submit "Create My FOAF!" %>
   </div>
 
   <script type="text/javascript">
-    $('.datepicker').datepicker({
-      format: 'yyyy-mm-dd'
+    function movieFormatResult(result) {
+        var markup = result.text;
+        return markup;
+    }
+
+    function movieFormatSelection(result) {
+        return result.text;
+    }
+
+    $(document).ready(function() {
+      $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd'
+      });
+      // $('.typeahead').typeahead( {name: 'planets', local: [ "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune" ] });
+      //$("#e9").select2();
+
+
+$("#e9").select2({
+
+       placeholder: {title: "Search for a movie", id: "s"},
+        minimumInputLength: 3,
+        multiple: true,
+        ajax: {
+            url: "http://localhost:3000/fake.json",
+            dataType: 'json',
+            quietMillis: 100,
+            data: function (term, page) { // page is the one-based page number tracked by Select2
+                return {
+                    /*
+                    q: term, //search term
+                    page_limit: 10, // page size
+                    page: page, // page number
+                    apikey: "ju6z9mjyajq2djue3gbvv26t" // please do not use so this example keeps working
+                    */
+                };
+            },
+            results: function (data, page) {
+                var more = (page * 10) < data.total; // whether or not there are more results available
+
+                // notice we return the value of more so Select2 knows if more results can be loaded
+                return {results: data.results, more: more};
+            }
+        },
+        formatResult: movieFormatResult, // omitted for brevity, see the source of this page
+        formatSelection: movieFormatSelection // omitted for brevity, see the source of this page
+
+        });
+
     });
   </script>
 
