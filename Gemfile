@@ -33,6 +33,7 @@ gem 'rdf'
 gem 'rdf-raptor'
 gem 'linkeddata'
 gem 'database_cleaner'
+gem "select2-rails"
 
 group :development, :test do
   gem 'rspec-rails'
