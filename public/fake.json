@@ -1,0 +1,5 @@
+{ "results": [ 
+	{"id":"1", "text":"Astronomy", "uri":"http://id.loc.gov/authorities/subjects/sh85009003"}, 
+	{"id":"2", "text": "Astronomy, Aboriginal Australian", "uri":"http://id.loc.gov/authorities/subjects/sh98004815"}, 
+	{"id":"3", "text": "Astronomy, Rennaissance", "uri":"http://id.loc.gov/authorities/subjects/sh92001341"}
+  ], "more": false }
