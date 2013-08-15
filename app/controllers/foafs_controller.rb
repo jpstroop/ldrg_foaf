@@ -37,7 +37,8 @@ class FoafsController < ApplicationController
       slug: foaf_params[:slug], birthday: foaf_params[:birthday])
 
     if(foaf_params.has_key?(:interests_attributes))
-      foaf_params[:interests_attributes]["0"][:id].each do |i|
+      interest_ids = foaf_params[:interests_attributes].split(",").map { |s| s.to_i }
+      interest_ids.each do |i|
         @foaf.interests << Interest.find(i)
       end
     end
@@ -60,13 +61,17 @@ class FoafsController < ApplicationController
     @foaf.interests.clear
 
     if(foaf_params.has_key?(:interests_attributes))
-      foaf_params[:interests_attributes]["0"][:id].each do |i|
+      interest_ids = foaf_params[:interests_attributes].split(",").map { |s| s.to_i }
+      interest_ids.each do |i|
         @foaf.interests << Interest.find(i)
+        #@foaf.update(Interest.find(i))
       end
+      
     end
 
     respond_to do |format|
-      if @foaf.update(foaf_params)
+      if @foaf.update(name: foaf_params[:name], work: foaf_params[:work], 
+      slug: foaf_params[:slug], birthday: foaf_params[:birthday])
         format.html { redirect_to @foaf, notice: 'Foaf was successfully updated.' }
         format.json { head :no_content }
       else
@@ -95,7 +100,7 @@ class FoafsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def foaf_params
-      params.require(:foaf).permit(:name, :work, :slug, :birthday, interests_attributes: [ { id: [] } ])
+      params.require(:foaf).permit(:name, :work, :slug, :birthday, :interests_attributes)
 
       
     end
