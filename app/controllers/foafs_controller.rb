@@ -5,6 +5,8 @@ class FoafsController < ApplicationController
   # GET /foafs.json
   def index
     @foafs = Foaf.all
+    # if all else fails, make RDF them
+    # rapper -o dot -i turtle me.ttl | dot -Tsvg -o me.svg
   end
 
   # GET /foafs/1
