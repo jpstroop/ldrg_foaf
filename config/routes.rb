@@ -1,5 +1,5 @@
 LdrgFoaf::Application.routes.draw do
-  resources :interests, only: :index, defaults: { format: 'json' }
+  get 'interests', to: 'interests#index', defaults: { format: 'json' }
 
   resources :foafs
 
