@@ -47,6 +47,7 @@ GEM
     execjs (1.4.0)
       multi_json (~> 1.0)
     ffi (1.9.0)
+    friendly_id (5.0.0.beta1)
     haml (4.0.3)
       tilt
     hike (1.2.3)
@@ -201,6 +202,7 @@ DEPENDENCIES
   bootstrap-datepicker-rails
   coffee-rails (~> 4.0.0)
   database_cleaner
+  friendly_id (= 5.0.0.beta1)
   jbuilder (~> 1.2)
   jquery-rails
   linkeddata

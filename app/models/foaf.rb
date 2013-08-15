@@ -1,6 +1,9 @@
 require 'uri'
 
 class Foaf < ActiveRecord::Base
+  extend FriendlyId
+  friendly_id :slug, use: :slugged
+
   has_and_belongs_to_many :interests, autosave: false
   accepts_nested_attributes_for :interests
 

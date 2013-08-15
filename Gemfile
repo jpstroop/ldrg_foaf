@@ -35,6 +35,9 @@ gem 'linkeddata'
 gem 'database_cleaner'
 gem "select2-rails"
 
+# gem 'friendly_id', :git => 'git://github.com/norman/friendly_id.git'
+gem 'friendly_id', '5.0.0.beta1'
+
 group :development, :test do
   gem 'rspec-rails'
 end
