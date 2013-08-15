@@ -35,6 +35,8 @@ describe FoafsController do
   # FoafsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
+ # TODO tests for slug routes
+
   describe "GET index" do
     it "assigns all foafs as @foafs" do
       foaf = Foaf.create! valid_attributes

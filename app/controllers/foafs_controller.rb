@@ -12,6 +12,16 @@ class FoafsController < ApplicationController
   # GET /foafs/1
   # GET /foafs/1.json
   def show
+
+      # see: http://stackoverflow.com/a/4500343/714478
+      
+      # USE WRITERS EXPLICITLY, don't look them up!
+      # output = RDF::Turtle::Writer.buffer(prefixes: Foaf::PREFIXES) do |writer|
+      #   graph.each_statement do |statement|
+      #     writer << statement
+      #   end
+      # end
+
   end
 
   # GET /foafs/new
@@ -98,7 +108,5 @@ class FoafsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def foaf_params
       params.require(:foaf).permit(:name, :work, :slug, :birthday, interests_attributes: [ { id: [] } ])
-
-      
     end
 end

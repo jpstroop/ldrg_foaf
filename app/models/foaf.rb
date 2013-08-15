@@ -1,6 +1,6 @@
-require 'uri'
 require 'rdf'
 require 'linkeddata'
+require 'uri'
 
 class Foaf < ActiveRecord::Base
   extend FriendlyId
@@ -35,39 +35,43 @@ class Foaf < ActiveRecord::Base
   }
 
 
+  # def doc_uri 
+  #   "#{Rails.application.routes.url_helpers.foafs_path}/#{slug}"
+  #   # RDF::URI.new("http://#{request.host}{request.fullpath}")
+  # end
 
-  doc_uri = RDF::URI.new("#{Rails.application.routes.url_helpers.foafs_path}/#{:slug}")
-  my_uri = doc_uri.join('#me')
+  # def my_uri 
+  #   doc_uri.join('#me')
+  # end
 
-  def to_graph
-    graph = RDF::Graph.new do
-      
-      # # the doc
-      # self << RDF::Statement.new(doc, RDF.type, RDF::FOAF.PersonalProfileDocument)
-      # self << RDF::Statement.new(doc, RDF::FOAF.primaryTopic, me)
-      # self << RDF::Statement.new(doc, RDF::DC.modified, Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S.%LZ"))
+  def to_graph(your_uri)
 
-      # me
-      me = uris[:jstroop]
-      self << RDF::Statement.new(me, RDF.type, RDF::FOAF.Person)
-      self << [me, RDF::FOAF.name, name]
-      self << [me, RDF::FOAF.birthday, bday]
-      self << [me, RDF::FOAF.workInfoHomepage, work]
-      schools.each { |s| self << [me, RDF::FOAF.schoolHomepage, RDF::URI.new(s)] }
-      interests.each { |i| self << [me, RDF::FOAF.interest, RDF::URI.new(i)] }
-    end
+    me = RDF::URI.new(your_uri)
+
+    graph = RDF::Graph.new
+
+    graph << RDF::Statement.new(me, RDF.type, RDF::FOAF.Person)
+    graph << [me, RDF::FOAF.name, self.name]
+    graph << [me, RDF::FOAF.birthday, self.birthday]
+    graph << [me, RDF::FOAF.workInfoHomepage, RDF::URI.new(self.work)]
+
+    self.interests.each { |i| graph << [me, RDF::FOAF.interest, RDF::URI.new(i)] }
     graph
   end
 
-  def to_doc_graph
-      graph = RDF::Graph.new do
-      
-      doc 
-      # self << RDF::Statement.new(doc, RDF.type, RDF::FOAF.PersonalProfileDocument)
-      # self << RDF::Statement.new(doc, RDF::FOAF.primaryTopic, me)
-      # self << RDF::Statement.new(doc, RDF::DC.modified, Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S.%LZ"))
+  def to_doc_graph(doc_uri)
 
+    doc_uri = RDF::URI.new(doc_uri)
+    subject_uri = doc_uri.join('#me')
+
+    graph = RDF::Graph.new do
+      self << RDF::Statement.new(doc_uri, RDF.type, RDF::FOAF.PersonalProfileDocument)
+      self << RDF::Statement.new(doc_uri, RDF::FOAF.primaryTopic, subject_uri)
+      self << RDF::Statement.new(doc_uri, RDF::DC.modified, Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S.%LZ"))
     end
+
+    graph << self.to_graph(subject_uri)
+
     graph
   end
 
