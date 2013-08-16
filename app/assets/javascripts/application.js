@@ -13,6 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require_tree .
-//= require bootstrap-datepicker
+//= require bootstrap-datepicker/core
 //= require select2
+//= require raphael-min
+//= require dracula_graffle
+//= require dracula_graph
