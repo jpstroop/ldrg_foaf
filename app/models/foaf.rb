@@ -64,11 +64,10 @@ class Foaf < ActiveRecord::Base
       subject_uri = doc_uri.join('#me')
     end 
 
-    graph = RDF::Graph.new do
-      self << RDF::Statement.new(doc_uri, RDF.type, RDF::FOAF.PersonalProfileDocument)
-      self << RDF::Statement.new(doc_uri, RDF::FOAF.primaryTopic, subject_uri)
-      self << RDF::Statement.new(doc_uri, RDF::DC.modified, Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S.%LZ"))
-    end
+    graph = RDF::Graph.new
+    graph << [doc_uri, RDF.type, RDF::FOAF.PersonalProfileDocument]
+    graph << [doc_uri, RDF::FOAF.primaryTopic, subject_uri]
+    graph << [doc_uri, RDF::DC.modified, DateTime.parse(self.updated_at.to_s)]
 
     graph << self.to_graph(subject_uri)
 

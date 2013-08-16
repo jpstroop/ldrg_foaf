@@ -1,5 +1,6 @@
 require 'rdf'
 require 'linkeddata'
+require 'json'
 
 class FoafsController < ApplicationController
   before_action :set_foaf, only: [:show, :edit, :update, :destroy]
@@ -17,34 +18,28 @@ class FoafsController < ApplicationController
   def show
       # @foaf = Foaf.find(:id)
     respond_to do |format|
-      format.html
-      format.ttl { render text: convert_to_ttl(@foaf) }
+      format.html { render text: convert_one_to_rdf(@foaf, :html) }
+      format.ttl { render text: convert_one_to_rdf(@foaf, :ttl) }
+      format.rj { render text: convert_one_to_rdf(@foaf, :json) }
+      format.nt { render text: convert_one_to_rdf(@foaf, :ntriples) }
+      format.rdf { render text: convert_one_to_rdf(@foaf, :rdf) }
     end
   end
 
-  def convert_to_ttl(foaf) 
+  def uri
     uri = "http://#{request.host}#{request.fullpath}"
-    output = RDF::Turtle::Writer.buffer(prefixes: Foaf::PREFIXES) do |writer|
+  end
+
+  def convert_one_to_rdf(foaf, fmt) 
+    output = RDF::Writer.for(fmt).buffer(prefixes: Foaf::PREFIXES) do |writer|
       foaf.to_doc_graph(uri).each_statement do |statement|
         writer << statement
       end
     end
+    if fmt == :json # make it easier to read
+      JSON.pretty_generate(JSON.parse!(output))
+    end
   end
-      # see: http://stackoverflow.com/a/4500343/714478
-
-      # also: http://apidock.com/rails/ActionController/MimeResponds/InstanceMethods/respond_to
-      # If you need to use a MIME type which isn’t supported by default, you 
-      # can register your own handlers in environment.rb as follows:
-
-      # Mime::Type.register "image/jpg", :jpg
-
-      # USE WRITERS EXPLICITLY, don't look them up!
-      # output = RDF::Turtle::Writer.buffer(prefixes: Foaf::PREFIXES) do |writer|
-      #   graph.each_statement do |statement|
-      #     writer << statement
-      #   end
-      # end
-
 
   # GET /foafs/new
   def new
