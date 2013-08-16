@@ -34,16 +34,6 @@ class Foaf < ActiveRecord::Base
     message: 'may only consist of lowercase letters and no spaces'
   }
 
-
-  # def doc_uri 
-  #   "#{Rails.application.routes.url_helpers.foafs_path}/#{slug}"
-  #   # RDF::URI.new("http://#{request.host}{request.fullpath}")
-  # end
-
-  # def my_uri 
-  #   doc_uri.join('#me')
-  # end
-
   def to_graph(your_uri)
 
     me = RDF::URI.new(your_uri)
@@ -55,14 +45,24 @@ class Foaf < ActiveRecord::Base
     graph << [me, RDF::FOAF.birthday, self.birthday]
     graph << [me, RDF::FOAF.workInfoHomepage, RDF::URI.new(self.work)]
 
-    self.interests.each { |i| graph << [me, RDF::FOAF.interest, RDF::URI.new(i)] }
+    self.interests.each do |i| 
+      graph << [me, RDF::FOAF.interest, RDF::URI.new(i.uri)]
+    end
     graph
   end
 
   def to_doc_graph(doc_uri)
 
     doc_uri = RDF::URI.new(doc_uri)
-    subject_uri = doc_uri.join('#me')
+
+    if doc_uri.basename.include? '.'
+      # subject_uri = doc_uri.join('#me')
+      dot_tokens = doc_uri.to_s.split('.')
+      dot_tokens.pop
+      subject_uri = RDF::URI.new(dot_tokens.join('.')).join('#me')
+    else
+      subject_uri = doc_uri.join('#me')
+    end 
 
     graph = RDF::Graph.new do
       self << RDF::Statement.new(doc_uri, RDF.type, RDF::FOAF.PersonalProfileDocument)
