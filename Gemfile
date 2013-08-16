@@ -34,6 +34,7 @@ gem 'rdf-raptor'
 gem 'linkeddata'
 gem 'database_cleaner'
 gem "select2-rails"
+#gem 'select2-rails', :git => 'git://github.com/astax-t/select2.git'
 
 group :development, :test do
   gem 'rspec-rails'
