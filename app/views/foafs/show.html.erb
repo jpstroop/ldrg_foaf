@@ -1,14 +1,60 @@
-<p id="notice"><%= notice %></p>
+<!DOCTYPE html>
+<html prefix='dc: http://purl.org/dc/terms/ foaf: http://xmlns.com/foaf/0.1/ lcsh: http://id.loc.gov/authorities/subjects/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# xsd: http://www.w3.org/2001/XMLSchema#'>
+<head>
+  <title><%= @foaf.name %>'s FOAF</title>
+  <meta content="authenticity_token" name="csrf-param" />
+  <meta content="PU03p/u04YQ1WHXTeQLerW8y8VOCkjw1YMmsanROXcM=" name="csrf-token" />
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+  <header>
+    <h1><%= @foaf.name %>'s FOAF</h1>
+  </header>
 
-<p>
-  <strong>Name:</strong>
-  <%= @foaf.name %>
-</p>
+  <section resource='<%= "http://#{request.host}#{request.fullpath}" %>' typeof='foaf:PersonalProfileDocument'>
+    <p id="notice"><%= notice %></p>
+    <p>Last Modified: <span content='2013-08-15T23:37:22Z' datatype='xsd:dateTime' property='dc:modified'><%= @foaf.updated_at %></span></p>
+    <dd>
+      <dl rel='foaf:primaryTopic' resource='http://localhost/foafs/jstroop#me' typeof='foaf:Person'>
+        <dt>Name</dt>
+        <dd property='foaf:name'><%= @foaf.name %></dd>
 
-<p>
-  <strong>Work:</strong>
-  <%= @foaf.work %>
-</p>
+        <dt>Birthday:</dt>
+        <dd content='<%= DateTime.parse(@foaf.birthday.to_s).to_date %>' datatype='xsd:date' property='foaf:birthday'><%= @foaf.birthday.strftime('%A, %e %B %Y') %></dd>
 
-<%= link_to 'Edit', edit_foaf_path(@foaf) %> |
-<%= link_to 'Back', foafs_path %>
+        <dt>Interests:</dt>
+        <dd>
+          <ul>
+            <% @foaf.interests.each do |i| %>
+            <li>
+              <a href='<%= i.uri %>' property='foaf:interest'><%= i.label %></a>
+            </li>
+            <% end %>
+          </ul>
+        </dd>
+
+        <dt>Work Homepage:</dt>
+        <dd>
+          <a href='http://library.princeton.edu' property='foaf:workInfoHomepage'>http://library.princeton.edu</a>
+        </dd>
+
+      </dl>
+
+    </dd>
+  </section>
+  <footer>
+    <p>There is RDF-a embedded in this page. Try pasting the URI into the <%= link_to 'W3C RDFa Distiller', 'http://www.w3.org/2012/pyRdfa' %></p>
+    <p>You can also view this page in other formats:</p>
+    <ul>
+      <li><a href='<%= "#{request.fullpath}.ttl" %>'>Turtle</a></li>
+      <li><a href='<%= "#{request.fullpath}.jsonld" %>'>JSON-LD</a></li>
+      <li><a href='<%= "#{request.fullpath}.rj" %>'>RDF JSON</a></li>
+      <li><a href='<%= "#{request.fullpath}.nt" %>'>N-Triples</a></li>
+      <li><a href='<%= "#{request.fullpath}.rdf" %>'>RDF/XML</a></li>
+    </ul>
+
+    <p><%= link_to 'Edit', edit_foaf_path(@foaf) %> | <%= link_to 'Back', foafs_path %></p>
+  </footer>
+</body>
+</html>

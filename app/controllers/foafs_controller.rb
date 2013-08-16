@@ -1,3 +1,8 @@
+require 'rdf'
+require 'linkeddata'
+require 'json'
+# require 'json/ld'
+
 class FoafsController < ApplicationController
   before_action :set_foaf, only: [:show, :edit, :update, :destroy]
 
@@ -5,11 +10,57 @@ class FoafsController < ApplicationController
   # GET /foafs.json
   def index
     @foafs = Foaf.all
+    # if all else fails, make RDF then
+    # rapper -o dot -i turtle me.ttl | dot -Tsvg -o me.svg
+    respond_to do |format|
+      format.html #{ render text: convert_one_to_rdf(@foaf, :html) }
+      format.ttl { render text: convert_many_to_rdf(@foafs, :ttl) }
+      format.rj { render text: convert_many_to_rdf(@foafs, :json) }
+      format.nt { render text: convert_many_to_rdf(@foafs, :ntriples) }
+      format.rdf { render text: convert_many_to_rdf(@foafs, :rdf) }
+      format.jsonld { render text: convert_many_to_rdf(@foafs, :jsonld) }
+    end
   end
 
   # GET /foafs/1
   # GET /foafs/1.json
   def show
+      # @foaf = Foaf.find(:id)
+    respond_to do |format|
+      format.html { render layout: false }#text: convert_one_to_rdf(@foaf, :html) }
+      format.ttl { render text: convert_one_to_rdf(@foaf, :ttl) }
+      format.rj { render text: convert_one_to_rdf(@foaf, :json) }
+      format.nt { render text: convert_one_to_rdf(@foaf, :ntriples) }
+      format.rdf { render text: convert_one_to_rdf(@foaf, :rdf) }
+      format.jsonld { render text: convert_one_to_rdf(@foaf, :jsonld) }
+    end
+  end
+
+  def uri
+    uri = "http://#{request.host}#{request.fullpath}"
+  end
+
+  def convert_one_to_rdf(foaf, fmt) 
+    output = foaf.to_doc_graph(uri).dump(fmt, prefixes: Foaf::PREFIXES)
+    if [:json, :jsonld].include? fmt # make it easier to read
+      JSON.pretty_generate(JSON.parse!(output))
+    end
+    output
+  end
+
+  def convert_many_to_rdf(foafs, fmt) 
+    graph = RDF::Graph.new
+    foafs.each do |f|
+      current_uri = RDF::URI.new("http://#{request.host}#{request.fullpath}")
+      path = Foaf.strip_extension_from_uri(current_uri)
+      uri = "#{path}/#{f.slug}#me"
+      graph << f.to_graph(uri)
+    end
+    output = graph.dump(fmt, prefixes: Foaf::PREFIXES)
+    if [:json, :jsonld].include? fmt # make it easier to read
+      JSON.pretty_generate(JSON.parse!(output))
+    end
+    output
   end
 
   # GET /foafs/new
@@ -95,13 +146,11 @@ class FoafsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_foaf
-      @foaf = Foaf.find(params[:id])
+      @foaf = Foaf.friendly.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def foaf_params
       params.require(:foaf).permit(:name, :work, :slug, :birthday, :interests_attributes)
-
-      
     end
 end
