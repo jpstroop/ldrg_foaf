@@ -27,7 +27,7 @@ class FoafsController < ApplicationController
   def show
       # @foaf = Foaf.find(:id)
     respond_to do |format|
-      format.html { render text: convert_one_to_rdf(@foaf, :html) }
+      format.html { render layout: false }#text: convert_one_to_rdf(@foaf, :html) }
       format.ttl { render text: convert_one_to_rdf(@foaf, :ttl) }
       format.rj { render text: convert_one_to_rdf(@foaf, :json) }
       format.nt { render text: convert_one_to_rdf(@foaf, :ntriples) }
