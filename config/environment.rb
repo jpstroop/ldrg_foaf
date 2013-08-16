@@ -9,3 +9,4 @@ Mime::Type.register "text/turtle", :ttl
 Mime::Type.register "text/plain", :nt
 Mime::Type.register "application/rdf+xml", :rdf
 Mime::Type.register "application/rdf+json", :rj
+Mime::Type.register "application/ld+json", :jsonld

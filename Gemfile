@@ -32,6 +32,7 @@ gem 'bootstrap-datepicker-rails'
 gem 'rdf'
 gem 'rdf-raptor'
 gem 'linkeddata'
+gem 'json-ld'
 gem 'database_cleaner'
 gem "select2-rails"
 

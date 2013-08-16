@@ -11,7 +11,8 @@ class Foaf < ActiveRecord::Base
     rdf: RDF.to_uri,
     rdfs: RDF::RDFS.to_uri,
     xsd: RDF::XSD.to_uri,
-    dc: RDF::DC.to_uri
+    dc: RDF::DC.to_uri,
+    lcsh: RDF::URI.new('http://id.loc.gov/authorities/subjects/')
   }
 
   LD_GROUP_URI = RDF::URI.new('http://library.princeton.edu/ld_group')
@@ -51,18 +52,19 @@ class Foaf < ActiveRecord::Base
     graph
   end
 
+  def self.strip_extension_from_uri(uri)
+    if uri.basename.include? '.'
+      dot_tokens = uri.to_s.split('.')
+      dot_tokens.pop
+      uri = dot_tokens.join('.')
+    end 
+    uri
+  end
+
   def to_doc_graph(doc_uri)
 
     doc_uri = RDF::URI.new(doc_uri)
-
-    if doc_uri.basename.include? '.'
-      # subject_uri = doc_uri.join('#me')
-      dot_tokens = doc_uri.to_s.split('.')
-      dot_tokens.pop
-      subject_uri = RDF::URI.new(dot_tokens.join('.')).join('#me')
-    else
-      subject_uri = doc_uri.join('#me')
-    end 
+    subject_uri = RDF::URI.new(Foaf.strip_extension_from_uri(doc_uri)).join('#me')
 
     graph = RDF::Graph.new
     graph << [doc_uri, RDF.type, RDF::FOAF.PersonalProfileDocument]
