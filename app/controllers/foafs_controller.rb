@@ -4,6 +4,7 @@ require 'json'
 # require 'json/ld'
 
 class FoafsController < ApplicationController
+  include FoafsHelper
   before_action :set_foaf, only: [:show, :edit, :update, :destroy]
 
   # GET /foafs
@@ -36,11 +37,9 @@ class FoafsController < ApplicationController
     end
   end
 
-  def uri
-    uri = "http://#{request.host}#{request.fullpath}"
-  end
 
   def convert_one_to_rdf(foaf, fmt) 
+    uri = "http://#{request.host}#{request.fullpath}"
     output = foaf.to_doc_graph(uri).dump(fmt, prefixes: Foaf::PREFIXES)
     if [:json, :jsonld].include? fmt # make it easier to read
       JSON.pretty_generate(JSON.parse!(output))
@@ -48,13 +47,12 @@ class FoafsController < ApplicationController
     output
   end
 
+
+
   def convert_many_to_rdf(foafs, fmt) 
     graph = RDF::Graph.new
     foafs.each do |f|
-      current_uri = RDF::URI.new("http://#{request.host}#{request.fullpath}")
-      path = Foaf.strip_extension_from_uri(current_uri)
-      uri = "#{path}/#{f.slug}#me"
-      graph << f.to_graph(uri)
+      graph << f.to_graph(uri_from_foaf(f))
     end
     output = graph.dump(fmt, prefixes: Foaf::PREFIXES)
     if [:json, :jsonld].include? fmt # make it easier to read
