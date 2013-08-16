@@ -42,15 +42,6 @@
   </div>
 
   <script type="text/javascript">
-    function movieFormatResult(result) {
-        var markup = result.text;
-        return markup;
-    }
-
-    function movieFormatSelection(result) {
-        return result.text;
-    }
-
     $(document).ready(function() {
       $('.datepicker').datepicker({
         format: 'yyyy-mm-dd'
@@ -67,7 +58,7 @@
                     data: function(term, page) {
 
                         return {
-                            q: term,
+                            starts_with: term,
                             page_limit: 10,
                             //apikey: "z4vbb4bjmgsb7dy33kvux3ea" //my own apikey
                         };
@@ -86,21 +77,20 @@
                         var item = this.split(':');
                         data.push({
                             id: item[0],
-                            text: item[1]
+                            label: item[1]
                         });
                     });
-                    //$(element).val('');
                     callback(data);
                 }
             });
         };
 
-        function formatResult(movie) {
-            return '<div>' + movie.text + '</div>';
+        function formatResult(lcsh) {
+            return '<div>' + lcsh.label + '</div>';
         };
 
         function formatSelection(data) {
-            return data.text;
+            return data.label;
         };
 
       Array.prototype.clean = function(deleteValue) {
@@ -113,22 +103,14 @@
         return this;
       };
 
-    MultiAjaxAutoComplete('#e9', 'http://localhost:3000/fake.json');
-    // works
+    MultiAjaxAutoComplete('#e9', 'http://localhost:3000/interests');
+
     var set_val = [];
     <% @foaf.interests.each do |i| %>
         set_val.push("<%= i.id %>:<%= i.label %>");
     <% end %>
-    console.log(set_val.clean(":").toString())
-    // console.log(set_val.join('').split(',').toString())
-    //set_val.join('').split(''); 
+
     $('#e9').select2('val', set_val);
-    // $('#e9').select2('val', ['34:Donnie Darko','54:Heat','27:No Country for Old Men']);
-    // not works
-    // $('#e6').select2('val', '34:Donnie Darko,54:Heat,27:No Country for Old Men');
-        $('#save').click(function() {
-            alert($('#e9').val());
-        });
 
 
 
