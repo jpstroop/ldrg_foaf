@@ -13,3 +13,7 @@
  *= require bootstrap-datepicker
  *= require select2
  */
+
+th,td {
+  padding: .2em .5em .2em 0;
+}
