@@ -60,7 +60,6 @@
                         return {
                             starts_with: term,
                             page_limit: 10,
-                            //apikey: "z4vbb4bjmgsb7dy33kvux3ea" //my own apikey
                         };
                     },
                     results: function(data, page) {
@@ -106,66 +105,16 @@
     MultiAjaxAutoComplete('#e9', 'http://localhost:3000/interests');
 
     var set_val = [];
-    <% @foaf.interests.each do |i| %>
-        set_val.push("<%= i.id %>:<%= i.label %>");
-    <% end %>
 
-    $('#e9').select2('val', set_val);
+      <% @foaf.interests.each do |i| %>
+          set_val.push("<%= i.id %>:<%= i.label %>");
+      <% end %>
 
+    set_val = set_val.clean(":");
+    if (set_val.length > 0 ){
+      $('#e9').select2('val', set_val);
+    }
 
-
-
-      //var e9 = $('#e9');
-      //console.log(JSON.stringify($(e9).select2('data')));
-      //$("#e9").select2("val", "CA");
-      //$("#e9").select2('data', '{id:1,text:"enhancement"}, {id:2,text:"bug"}');
-
-      //$("#e9").select2("data", [{id: "CA", text: "California"},{id:"MA", text: "Massachusetts"}]);
-/*
-      $('#e9').select2('val', ['2:Domodedovo', '3:Vnukovo']);
-
-  $("#e9").select2({
-
-       placeholder: {title: "Search for an interest", id: "s"},
-        minimumInputLength: 3,
-        multiple: true,
-        ajax: {
-            url: "http://localhost:3000/fake.json",
-            dataType: 'json',
-            quietMillis: 100,
-            data: function (term, page) { // page is the one-based page number tracked by Select2
-                return {
-                 
-                    q: term, //search term
-                    page_limit: 10, // page size
-                    page: page, // page number
-                    apikey: "ju6z9mjyajq2djue3gbvv26t" // please do not use so this example keeps working
-                    
-                };
-            },
-            results: function (data, page) {
-                var more = (page * 10) < data.total; // whether or not there are more results available
-
-                // notice we return the value of more so Select2 knows if more results can be loaded
-                return {results: data.results, more: more};
-            }
-        },
-        formatResult: movieFormatResult, // omitted for brevity, see the source of this page
-        formatSelection: movieFormatSelection, // omitted for brevity, see the source of this page
-        initSelection: function(element, callback) {
-                        var data = [];
-                        $(element.val().split(",")).each(function(i) {
-                            var item = this.split(':');
-                            data.push({
-                                id: item[0],
-                                title: item[1]
-                            });
-                        });
-                        //$(element).val('');
-                        callback(data);
-                    }
-        });
-*/
     });
   </script>
 
