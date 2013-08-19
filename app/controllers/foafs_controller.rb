@@ -42,7 +42,7 @@ class FoafsController < ApplicationController
     uri = "http://#{request.host}#{request.fullpath}"
     output = foaf.to_doc_graph(uri).dump(fmt, prefixes: Foaf::PREFIXES)
     if [:json, :jsonld].include? fmt # make it easier to read
-      JSON.pretty_generate(JSON.parse!(output))
+      output = JSON.pretty_generate(JSON.parse!(output))
     end
     output
   end
@@ -56,7 +56,7 @@ class FoafsController < ApplicationController
     end
     output = graph.dump(fmt, prefixes: Foaf::PREFIXES)
     if [:json, :jsonld].include? fmt # make it easier to read
-      JSON.pretty_generate(JSON.parse!(output))
+      output = JSON.pretty_generate(JSON.parse!(output))
     end
     output
   end
