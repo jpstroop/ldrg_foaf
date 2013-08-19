@@ -113,8 +113,8 @@ describe FoafsController do
         # specifies that the Foaf created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        Foaf.any_instance.should_receive(:update).with({ "name" => "MyString" })
-        put :update, {:id => foaf.to_param, :foaf => { "name" => "MyString" }}, valid_session
+        Foaf.any_instance.should_receive(:update).with({:name=>"MyString", :work=>nil, :slug=>nil, :birthday=>nil})
+        put :update, {:id => foaf.to_param, :foaf => {:name=>"MyString", :work=>nil, :slug=>nil, :birthday=>nil}}, valid_session
       end
 
       it "assigns the requested foaf as @foaf" do
