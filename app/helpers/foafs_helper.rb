@@ -7,6 +7,7 @@ module FoafsHelper
   end
 
   def shorten_namespace(uri)
+    Foaf::PREFIXES[:ldrg] = "http://#{request.host}#{foafs_path}/"
     ns = Foaf::PREFIXES.select{ |k,v| uri.to_s.start_with? v }
     if ns.length == 1
       uri.to_s.sub(ns[ns.keys[0]], "#{ns.keys[0]}:")
