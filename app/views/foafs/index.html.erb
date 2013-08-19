@@ -26,7 +26,7 @@ var width = 1200;
 window.onload = function() {
     var g = new Graph();
 
-    var render_subject = function(r, n) {
+    var render_name = function(r, n) {
       var set = r.set().push(
         /* custom objects go here */
         r.rect(n.point[0]-30, n.point[1]-13, 62, 66).attr({"fill": "#fa8", "stroke-width": 2, r : "9px"})).push(
@@ -36,11 +36,14 @@ window.onload = function() {
 
     <% @foafs.each do |f| %>
       <% f.to_graph(uri_from_foaf(f)).each_statement  do |s| %>
-          g.addNode("<%= s.subject %>", { label: "<%= f.name %>", render : render_subject }); //, { label: "Foo", render : render_resource });
+          // g.addNode("<%= shorten_namespace(s.subject) %>");//, { label: "<%= f.name %>", render : render_subject }); //, { label: "Foo", render : render_resource });
 
           // TODO: make a rectangle if literal.
-          g.addNode("<%= s.object %>");
-          g.addEdge("<%= s.subject %>", "<%= s.object %>", { label : "<%= s.predicate %>", directed : true });
+          <% if shorten_namespace(s.object).start_with? 'lcsh' %>
+            g.addNode("<%= shorten_namespace s.object %>", { label : "<%= Interest.find_by(uri: s.object.to_s).label %>" })
+          <% end %>
+
+          g.addEdge("<%= shorten_namespace s.subject %>", "<%= shorten_namespace s.object %>", { label : "<%= shorten_namespace s.predicate %>", directed : true });
       <% end %>
     <% end %>
 

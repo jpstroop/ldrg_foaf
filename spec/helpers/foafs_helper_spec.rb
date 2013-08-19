@@ -11,5 +11,15 @@ require 'spec_helper'
 #   end
 # end
 describe FoafsHelper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "#shorten_namespace" do
+    it "should return the short version of a uri when possible" do
+      uri = 'http://xmlns.com/foaf/0.1/workInfoHomepage'
+      shorten_namespace(uri).should eq 'foaf:workInfoHomepage'
+    end
+
+    it "should return the the full uri when we don't have a prefix" do
+      uri = 'http://library.princeton.edu/libraries/mudd'
+      shorten_namespace(uri).should eq uri
+    end
+  end
 end

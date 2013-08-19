@@ -6,4 +6,13 @@ module FoafsHelper
    "#{path}/#{f.slug}#me"
   end
 
+  def shorten_namespace(uri)
+    ns = Foaf::PREFIXES.select{ |k,v| uri.to_s.start_with? v }
+    if ns.length == 1
+      uri.to_s.sub(ns[ns.keys[0]], "#{ns.keys[0]}:")
+    else
+      uri.to_s
+    end
+  end
+
 end
