@@ -1,4 +1,8 @@
 LdrgFoaf::Application.routes.draw do
+  
+  root :to => "foafs#index"
+
+
   get 'interests', to: 'interests#index', defaults: { format: 'json' }
 
   resources :foafs
