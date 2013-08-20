@@ -1,28 +1,39 @@
 <h1>FOAFs</h1>
-<p><%= link_to 'Create a New FOAF', new_foaf_path %></p>
 
-<table>
-  <tbody>
-    <% @foafs.each do |foaf| %>
-      <tr>
-        <td><%= foaf.name %></td>
-        <td>( <%= link_to 'View', foaf %> | <%= link_to 'Edit', edit_foaf_path(foaf) %> | <%= link_to 'Destroy', foaf, method: :delete, data: { confirm: 'Are you sure?' } %> )</td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<section>
+  <p><%= link_to 'Create a New FOAF', new_foaf_path %></p>
+  <table style="margin-bottom: 1em;">
+    <tbody>
+      <% @foafs.each do |foaf| %>
+        <tr>
+          <td><%= foaf.name %></td>
+          <td>( <%= link_to 'View', foaf %> | <%= link_to 'Edit', edit_foaf_path(foaf) %> | <%= link_to 'Destroy', foaf, method: :delete, data: { confirm: 'Are you sure?' } %> )</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
 
-<p>You can also view this page in other formats:</p>
-<ul>
-  <li><a href='<%= "#{foafs_path}.ttl" %>'>Turtle</a></li>
-  <li><a href='<%= "#{foafs_path}.jsonld" %>'>JSON-LD</a></li>
-  <li><a href='<%= "#{foafs_path}.rj" %>'>RDF JSON</a></li>
-  <li><a href='<%= "#{foafs_path}.nt" %>'>N-Triples</a></li>
-  <li><a href='<%= "#{foafs_path}.rdf" %>'>RDF/XML</a></li>
-</ul>
+<section>
+  <p>You can also view this page in other formats:</p>
+  <ul>
+    <li><a href='<%= "#{foafs_path}.ttl" %>'>Turtle</a></li>
+    <li><a href='<%= "#{foafs_path}.jsonld" %>'>JSON-LD</a></li>
+    <li><a href='<%= "#{foafs_path}.rj" %>'>RDF JSON</a></li>
+    <li><a href='<%= "#{foafs_path}.nt" %>'>N-Triples</a></li>
+    <li><a href='<%= "#{foafs_path}.rdf" %>'>RDF/XML</a></li>
+  </ul>
+</section>
 
-<div id="canvas"></div>
-<button id="redraw" onclick="redraw();">redraw</button>
+<section>
+  <div id="canvas"></div>
+</section>
+
+<footer>
+  <p>
+    <button id="redraw" onclick="redraw();">redraw</button>
+  </p>
+</footer>
 
 <script type="text/javascript">
 <!--
@@ -35,7 +46,7 @@ var width = 1200;
 window.onload = function() {
     var g = new Graph();
 
-    var render_name = function(r, n) {
+    var render_rectangle = function(r, n) {
       var set = r.set().push(
         /* custom objects go here */
         r.rect(n.point[0]-30, n.point[1]-13, 62, 66).attr({"fill": "#fa8", "stroke-width": 2, r : "9px"})).push(
@@ -48,6 +59,7 @@ window.onload = function() {
           // g.addNode("<%= shorten_namespace(s.subject) %>");//, { label: "<%= f.name %>", render : render_subject }); //, { label: "Foo", render : render_resource });
 
           // TODO: make a rectangle if literal.
+
           <% if shorten_namespace(s.object).start_with? 'lcsh' %>
             g.addNode("<%= shorten_namespace s.object %>", { label : "<%= Interest.find_by(uri: s.object.to_s).label %>" })
           <% end %>
