@@ -16,4 +16,27 @@ module FoafsHelper
     end
   end
 
+  def foaf_array_to_graph(foafs)
+
+    graph = RDF::Graph.new
+    doc_uri = RDF::URI.new(request.url)
+    stripped_uri = Foaf.strip_extension_from_uri(doc_uri)
+    group_uri = stripped_uri.join('#us')
+    graph << [group_uri, RDF.type, RDF::FOAF.Group]
+    graph << [group_uri, RDF::FOAF.name, "PUL Linked Data Reading Group"]
+
+    foafs.each do |f|
+      foaf_uri = RDF::URI.new(uri_from_foaf(f)).join('#me')
+      graph << [group_uri, RDF::FOAF.member, foaf_uri]
+      graph << f.to_graph(foaf_uri)
+    end
+
+    if doc_uri != stripped_uri
+      graph << [doc_uri, RDF::OWL.sameAs, stripped_uri]
+    end
+
+    graph
+
+  end
+
 end

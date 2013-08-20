@@ -9,7 +9,7 @@
         <% @foafs.each do |foaf| %>
           <tr>
             <td><%= foaf.name %></td>
-            <td>( <%= link_to 'View', foaf, property: "foaf:member", typeof: "foaf:Person", resource: "#{request.url}/#{foaf.slug}#me"%> | <%= link_to 'Edit', edit_foaf_path(foaf) %> | <%= link_to 'Destroy', foaf, method: :delete, data: { confirm: 'Are you sure?' } %> )</td>
+            <td>( <%= link_to 'View', foaf, property: "foaf:member", typeof: "foaf:Person", resource: "#{request.url}/#{foaf.slug}#me"%> | <%= link_to 'Edit', edit_foaf_path(foaf) %> | <%= link_to 'Delete', foaf, method: :delete, data: { confirm: 'Are you sure?' } %> )</td>
           </tr>
         <% end %>
       </tbody>
@@ -33,7 +33,7 @@
 </div>
 
 <section>
-  <div id="canvas" style="margin-left: auto; margin-right: auto;"></div>
+  <div id="canvas" style="margin: 0 auto 25px auto; padding: 0;"></div>
 </section>
 
 
@@ -42,7 +42,7 @@
 
 var redraw;
 var height = 1000;
-var width = $(window).width()-100;
+var width = $(window).width()-50;
 
 $('#canvas').width(width);
 
@@ -57,13 +57,11 @@ window.onload = function() {
         return set;
       };
 
-    <% @foafs.each do |f| %>
-    <% f.to_graph(uri_from_foaf(f)).each_statement  do |s| %>
+    <% foaf_array_to_graph(@foafs).each_statement  do |s| %>
     <% if shorten_namespace(s.object).start_with? 'lcsh' %>
     g.addNode("<%= shorten_namespace s.object %>", { label : "<%= Interest.find_by(uri: s.object.to_s).label %>" })
     <% end %>
     g.addEdge("<%= shorten_namespace s.subject %>", "<%= shorten_namespace s.object %>", { label : "<%= shorten_namespace s.predicate %>", directed : true });
-    <% end %>
     <% end %>
 
     /* layout the graph using the Spring layout implementation */
