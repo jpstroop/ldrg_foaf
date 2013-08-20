@@ -55,17 +55,12 @@ window.onload = function() {
       };
 
     <% @foafs.each do |f| %>
-      <% f.to_graph(uri_from_foaf(f)).each_statement  do |s| %>
-          // g.addNode("<%= shorten_namespace(s.subject) %>");//, { label: "<%= f.name %>", render : render_subject }); //, { label: "Foo", render : render_resource });
-
-          // TODO: make a rectangle if literal.
-
-          <% if shorten_namespace(s.object).start_with? 'lcsh' %>
-            g.addNode("<%= shorten_namespace s.object %>", { label : "<%= Interest.find_by(uri: s.object.to_s).label %>" })
-          <% end %>
-
-          g.addEdge("<%= shorten_namespace s.subject %>", "<%= shorten_namespace s.object %>", { label : "<%= shorten_namespace s.predicate %>", directed : true });
-      <% end %>
+    <% f.to_graph(uri_from_foaf(f)).each_statement  do |s| %>
+    <% if shorten_namespace(s.object).start_with? 'lcsh' %>
+    g.addNode("<%= shorten_namespace s.object %>", { label : "<%= Interest.find_by(uri: s.object.to_s).label %>" })
+    <% end %>
+    g.addEdge("<%= shorten_namespace s.subject %>", "<%= shorten_namespace s.object %>", { label : "<%= shorten_namespace s.predicate %>", directed : true });
+    <% end %>
     <% end %>
 
     /* layout the graph using the Spring layout implementation */
@@ -75,7 +70,6 @@ window.onload = function() {
     /* draw the graph using the RaphaelJS draw implementation */
     var renderer = new Graph.Renderer.Raphael('canvas', g, width, height);
     renderer.draw();
-    
    
     redraw = function() {
         layouter.layout();

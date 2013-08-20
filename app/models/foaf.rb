@@ -7,6 +7,7 @@ class Foaf < ActiveRecord::Base
   friendly_id :slug, use: :slugged
 
   PREFIXES = {
+    owl: RDF::OWL.to_uri,
     foaf: RDF::FOAF.to_uri,
     rdf: RDF.to_uri,
     rdfs: RDF::RDFS.to_uri,
@@ -56,7 +57,7 @@ class Foaf < ActiveRecord::Base
     if uri.basename.include? '.'
       dot_tokens = uri.to_s.split('.')
       dot_tokens.pop
-      uri = dot_tokens.join('.')
+      uri = RDF::URI.new(dot_tokens.join('.'))
     end 
     uri
   end

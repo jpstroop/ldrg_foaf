@@ -37,23 +37,36 @@ class FoafsController < ApplicationController
     end
   end
 
-
   def convert_one_to_rdf(foaf, fmt) 
-    uri = "http://#{request.host}#{request.fullpath}"
-    output = foaf.to_doc_graph(uri).dump(fmt, prefixes: Foaf::PREFIXES)
+    # uri = "http://#{request.host}#{request.fullpath}"
+    uri = RDF::URI.new(request.url)
+    graph = foaf.to_doc_graph(uri)
+    stripped_uri = Foaf.strip_extension_from_uri(uri)
+    if uri != stripped_uri
+      graph << [uri, RDF::OWL.sameAs, Foaf.strip_extension_from_uri(uri)]
+    end
+    output = graph.dump(fmt, prefixes: Foaf::PREFIXES)
+
     if [:json, :jsonld].include? fmt # make it easier to read
       output = JSON.pretty_generate(JSON.parse!(output))
     end
     output
   end
 
-
-
-  def convert_many_to_rdf(foafs, fmt) 
+  def convert_many_to_rdf(foafs, fmt)
     graph = RDF::Graph.new
+    uri = RDF::URI.new(request.url)
+    graph << [uri, RDF.type, RDF::FOAF.Project]
+
     foafs.each do |f|
       graph << f.to_graph(uri_from_foaf(f))
     end
+
+    stripped_uri = Foaf.strip_extension_from_uri(uri)
+    if uri != stripped_uri
+      graph << [uri, RDF::OWL.sameAs, Foaf.strip_extension_from_uri(uri)]
+    end
+
     output = graph.dump(fmt, prefixes: Foaf::PREFIXES)
     if [:json, :jsonld].include? fmt # make it easier to read
       output = JSON.pretty_generate(JSON.parse!(output))
