@@ -55,16 +55,19 @@ class FoafsController < ApplicationController
 
   def convert_many_to_rdf(foafs, fmt)
     graph = RDF::Graph.new
-    uri = RDF::URI.new(request.url)
-    graph << [uri, RDF.type, RDF::FOAF.Project]
+    doc_uri = RDF::URI.new(request.url)
+    stripped_uri = Foaf.strip_extension_from_uri(doc_uri)
+    group_uri = stripped_uri.join('#us')
+    graph << [group_uri, RDF.type, RDF::FOAF.Group]
 
     foafs.each do |f|
-      graph << f.to_graph(uri_from_foaf(f))
+      foaf_uri = RDF::URI.new(uri_from_foaf(f)).join('#me')
+      graph << [group_uri, RDF::FOAF.member, foaf_uri]
+      graph << f.to_graph(foaf_uri)
     end
 
-    stripped_uri = Foaf.strip_extension_from_uri(uri)
-    if uri != stripped_uri
-      graph << [uri, RDF::OWL.sameAs, Foaf.strip_extension_from_uri(uri)]
+    if doc_uri != stripped_uri
+      graph << [doc_uri, RDF::OWL.sameAs, stripped_uri]
     end
 
     output = graph.dump(fmt, prefixes: Foaf::PREFIXES)

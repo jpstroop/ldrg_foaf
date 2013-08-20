@@ -1,48 +1,51 @@
-<h1>FOAFs</h1>
+<div class="container">
+  <header>
+    <h1>FOAFs</h1>
+  </header>
+  <section prefix='dc: http://purl.org/dc/terms/ foaf: http://xmlns.com/foaf/0.1/' resource='<%= "http://#{request.host}#{request.fullpath}#us" %>' typeof='foaf:Group'>
+    <p><%= link_to 'Create a New FOAF', new_foaf_path %></p>
+    <table style="margin-bottom: 1em;">
+      <tbody>
+        <% @foafs.each do |foaf| %>
+          <tr>
+            <td><%= foaf.name %></td>
+            <td>( <%= link_to 'View', foaf, property: "foaf:member", typeof: "foaf:Person", resource: "#{request.url}/#{foaf.slug}#me"%> | <%= link_to 'Edit', edit_foaf_path(foaf) %> | <%= link_to 'Destroy', foaf, method: :delete, data: { confirm: 'Are you sure?' } %> )</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
 
-<section>
-  <p><%= link_to 'Create a New FOAF', new_foaf_path %></p>
-  <table style="margin-bottom: 1em;">
-    <tbody>
-      <% @foafs.each do |foaf| %>
-        <tr>
-          <td><%= foaf.name %></td>
-          <td>( <%= link_to 'View', foaf %> | <%= link_to 'Edit', edit_foaf_path(foaf) %> | <%= link_to 'Destroy', foaf, method: :delete, data: { confirm: 'Are you sure?' } %> )</td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</section>
-
-<section>
-  <p>You can also view this page in other formats:</p>
-  <ul>
-    <li><a href='<%= "#{foafs_path}.ttl" %>'>Turtle</a></li>
-    <li><a href='<%= "#{foafs_path}.jsonld" %>'>JSON-LD</a></li>
-    <li><a href='<%= "#{foafs_path}.rj" %>'>RDF JSON</a></li>
-    <li><a href='<%= "#{foafs_path}.nt" %>'>N-Triples</a></li>
-    <li><a href='<%= "#{foafs_path}.rdf" %>'>RDF/XML</a></li>
-  </ul>
-</section>
-
-<section>
-  <div id="canvas"></div>
-</section>
-
-<footer>
+  <section>
+    <p>There is RDF-a embedded in this page. Try pasting the URI into the <%= link_to 'W3C RDFa Distiller', 'http://www.w3.org/2012/pyRdfa' %></p>
+    <p>You can also view this page in other formats:</p>
+    <ul>
+      <li><a href='<%= "#{foafs_path}.ttl" %>'>Turtle</a></li>
+      <li><a href='<%= "#{foafs_path}.jsonld" %>'>JSON-LD</a></li>
+      <li><a href='<%= "#{foafs_path}.rj" %>'>RDF JSON</a></li>
+      <li><a href='<%= "#{foafs_path}.nt" %>'>N-Triples</a></li>
+      <li><a href='<%= "#{foafs_path}.rdf" %>'>RDF/XML</a></li>
+    </ul>
+  </section>
   <p>
-    <button id="redraw" onclick="redraw();">redraw</button>
+    <button id="redraw" onclick="redraw();">Redraw Graph</button>
   </p>
-</footer>
+</div>
+
+<section>
+  <div id="canvas" style="margin-left: auto; margin-right: auto;"></div>
+</section>
+
 
 <script type="text/javascript">
 <!--
 
 var redraw;
-var height = 800;
-var width = 1200;
+var height = 1000;
+var width = $(window).width()-100;
 
-/* only do all this when document has finished loading (needed for RaphaelJS) */
+$('#canvas').width(width);
+
 window.onload = function() {
     var g = new Graph();
 

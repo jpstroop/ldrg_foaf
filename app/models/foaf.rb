@@ -45,7 +45,7 @@ class Foaf < ActiveRecord::Base
     graph << RDF::Statement.new(me, RDF.type, RDF::FOAF.Person)
     graph << [me, RDF::FOAF.name, self.name]
     graph << [me, RDF::FOAF.birthday, self.birthday]
-    graph << [me, RDF::FOAF.workInfoHomepage, RDF::URI.new(self.work)]
+    graph << [me, RDF::FOAF.workplaceHomepage, RDF::URI.new(self.work)]
 
     self.interests.each do |i| 
       graph << [me, RDF::FOAF.interest, RDF::URI.new(i.uri)]
