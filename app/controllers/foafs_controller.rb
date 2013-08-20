@@ -94,7 +94,7 @@ class FoafsController < ApplicationController
 
     respond_to do |format|
       if @foaf.save 
-        format.html { redirect_to @foaf, notice: 'Foaf was successfully created.' }
+        format.html { redirect_to @foaf, notice: 'FOAF was successfully created.' }
         format.json { render action: 'show', status: :created, location: @foaf }
       else
         format.html { render action: 'new' }
@@ -121,7 +121,7 @@ class FoafsController < ApplicationController
     respond_to do |format|
       if @foaf.update(name: foaf_params[:name], work: foaf_params[:work], 
       slug: foaf_params[:slug], birthday: foaf_params[:birthday])
-        format.html { redirect_to @foaf, notice: 'Foaf was successfully updated.' }
+        format.html { redirect_to @foaf, notice: 'FOAF was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
