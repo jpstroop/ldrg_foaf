@@ -1,6 +1,10 @@
-<h1>Editing <%= @foaf.slug%>'s FOAF</h1>
+<div class="container">
+  <header>
+    <h1>Editing <%= @foaf.slug%>'s FOAF</h1>
+  </header>
 
 <%= render 'form' %>
 
 <%= link_to 'Show', @foaf %> |
 <%= link_to 'Back', foafs_path %>
+</div>
