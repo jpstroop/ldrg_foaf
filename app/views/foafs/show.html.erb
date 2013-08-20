@@ -13,10 +13,13 @@
   </header>
 
   <section resource='<%= "http://#{request.host}#{request.fullpath}" %>' typeof='foaf:PersonalProfileDocument'>
+
     <p id="notice"><%= notice %></p>
-    <p>Last Modified: <span content='2013-08-15T23:37:22Z' datatype='xsd:dateTime' property='dc:modified'><%= @foaf.updated_at %></span></p>
+    <p>Last Modified: <span content='<%= DateTime.parse(@foaf.updated_at.to_s) %>' datatype='xsd:dateTime' property='dc:modified'><%= @foaf.updated_at %></span></p>
+
     <dd>
-      <dl rel='foaf:primaryTopic' resource='http://localhost/foafs/jstroop#me' typeof='foaf:Person'>
+      <dl rel='foaf:primaryTopic' resource='<%= "http://#{request.host}#{request.fullpath}#me" %>' typeof='foaf:Person'>
+
         <dt>Name</dt>
         <dd property='foaf:name'><%= @foaf.name %></dd>
 
@@ -36,7 +39,7 @@
 
         <dt>Work Homepage:</dt>
         <dd>
-          <a href='http://library.princeton.edu' property='foaf:workInfoHomepage'>http://library.princeton.edu</a>
+          <a href='<%= @foaf.work %>' property='foaf:workInfoHomepage'>http://library.princeton.edu</a>
         </dd>
 
       </dl>

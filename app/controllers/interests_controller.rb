@@ -5,7 +5,7 @@ class InterestsController < ApplicationController
   # GET /interests.json
 
   def index
-    @interests = Interest.where("label LIKE :prefix", prefix: "#{params[:starts_with]}%").limit(10)
+    @interests = Interest.where("label LIKE :prefix", prefix: "#{params[:starts_with]}%").limit(20)
     s = @interests.to_json only: [:label, :uri, :id]
     render json: "{ \"results\": #{s}, \"more\": true }"
   end
