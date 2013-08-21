@@ -6,8 +6,15 @@
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+  <% if params[:action] == 'index' %>
+  <% [:ttl, :rj,:nt, :rdf, :jsonld].each do |f| %>
+  <link href="<%=  "#{Foaf.strip_extension_from_uri(request.url)}.#{Mime::Type.lookup_by_extension(f).to_sym}" %>" rel="alternate" type="<%= "#{Mime::Type.lookup_by_extension(f)}"%>"/>
+  <% end %>
+  <% end %>
+  
 </head>
 <body>
+
     <%= yield %>
 </body>
 </html>

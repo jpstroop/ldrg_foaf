@@ -4,7 +4,12 @@
   <title><%= @foaf.name %>'s FOAF</title>
   <meta content="authenticity_token" name="csrf-param" />
   <meta content="PU03p/u04YQ1WHXTeQLerW8y8VOCkjw1YMmsanROXcM=" name="csrf-token" />
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+  <% [:ttl, :rj,:nt, :rdf, :jsonld].each do |f| %>
+  <link href="<%=  "#{Foaf.strip_extension_from_uri(request.url)}.#{Mime::Type.lookup_by_extension(f).to_sym}" %>" rel="alternate" type="<%= "#{Mime::Type.lookup_by_extension(f)}"%>"/>
+  <% end %>
 </head>
 <body>
   <div class="container">
