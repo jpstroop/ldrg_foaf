@@ -54,7 +54,7 @@ class Foaf < ActiveRecord::Base
   end
 
   def self.strip_extension_from_uri(uri)
-    if uri.basename.include? '.'
+    if RDF::URI.new(uri).basename.include? '.'
       dot_tokens = uri.to_s.split('.')
       dot_tokens.pop
       uri = RDF::URI.new(dot_tokens.join('.'))

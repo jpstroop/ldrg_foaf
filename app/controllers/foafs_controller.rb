@@ -14,12 +14,29 @@ class FoafsController < ApplicationController
     # if all else fails, make RDF then
     # rapper -o dot -i turtle me.ttl | dot -Tsvg -o me.svg
     respond_to do |format|
-      format.html #{ render text: convert_one_to_rdf(@foaf, :html) }
-      format.ttl { render text: convert_many_to_rdf(@foafs, :ttl) }
-      format.rj { render text: convert_many_to_rdf(@foafs, :json) }
-      format.nt { render text: convert_many_to_rdf(@foafs, :ntriples) }
-      format.rdf { render text: convert_many_to_rdf(@foafs, :rdf) }
-      format.jsonld { render text: convert_many_to_rdf(@foafs, :jsonld) }
+      format.html do 
+        response.headers['Link'] = make_link_header(:html)
+      end
+      format.ttl do 
+        response.headers['Link'] = make_link_header(:ttl)
+        render text: convert_many_to_rdf(@foafs, :ttl) 
+      end
+      format.rj do 
+        response.headers['Link'] = make_link_header(:rj)
+        render text: convert_many_to_rdf(@foafs, :json) 
+      end
+      format.nt do 
+        response.headers['Link'] = make_link_header(:nt)
+        render text: convert_many_to_rdf(@foafs, :ntriples) 
+      end
+      format.rdf do 
+        response.headers['Link'] = make_link_header(:rdf)
+        render text: convert_many_to_rdf(@foafs, :rdf) 
+      end
+      format.jsonld do 
+        response.headers['Link'] = make_link_header(:jsonld)
+        render text: convert_many_to_rdf(@foafs, :jsonld) 
+      end
     end
   end
 
@@ -28,17 +45,51 @@ class FoafsController < ApplicationController
   def show
       # @foaf = Foaf.find(:id)
     respond_to do |format|
-      format.html { render layout: false }#text: convert_one_to_rdf(@foaf, :html) }
-      format.ttl { render text: convert_one_to_rdf(@foaf, :ttl) }
-      format.rj { render text: convert_one_to_rdf(@foaf, :json) }
-      format.nt { render text: convert_one_to_rdf(@foaf, :ntriples) }
-      format.rdf { render text: convert_one_to_rdf(@foaf, :rdf) }
-      format.jsonld { render text: convert_one_to_rdf(@foaf, :jsonld) }
+
+      format.html do 
+        response.headers['Link'] = make_link_header(:html)
+        render layout: false 
+      end
+      format.ttl do 
+        response.headers['Link'] = make_link_header(:ttl)
+        render text: convert_one_to_rdf(@foaf, :ttl)
+      end
+
+      format.rj do 
+        response.headers['Link'] = make_link_header(:rj)
+        render text: convert_one_to_rdf(@foaf, :json) 
+      end
+
+      format.nt do 
+        response.headers['Link'] = make_link_header(:nt)
+        render text: convert_one_to_rdf(@foaf, :ntriples) 
+      end
+      format.rdf do 
+        response.headers['Link'] = make_link_header(:rdf)
+        render text: convert_one_to_rdf(@foaf, :rdf) 
+      end
+      format.jsonld do 
+        response.headers['Link'] = make_link_header(:jsonld)
+        render text: convert_one_to_rdf(@foaf, :jsonld) 
+      end
     end
+  end
+
+  def make_link_header(exclude_fmt)
+    all_formats = [:ttl, :rj,:nt, :rdf, :jsonld, :html]
+    alt_formats = all_formats.select { |t| t != exclude_fmt }
+    links = []
+    alt_formats.each do |f|
+      mime = Mime::Type.lookup_by_extension(f)
+      uri = "#{Foaf.strip_extension_from_uri(request.url)}.#{mime.to_sym}"
+      links << "<#{uri}>;rel=\"alt\";type=\"#{mime}\""
+    end
+    links.join(',')
   end
 
   def convert_one_to_rdf(foaf, fmt) 
     # uri = "http://#{request.host}#{request.fullpath}"
+    
     uri = RDF::URI.new(request.url)
     graph = foaf.to_doc_graph(uri)
     stripped_uri = Foaf.strip_extension_from_uri(uri)
